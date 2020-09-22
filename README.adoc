@@ -1,0 +1,5 @@
+= Hibernate Identifiable Enum
+
+Sample of custom Hibernate type to save enums by identifiers.
+
+See example in HibernateEnumMapperApplication class.
