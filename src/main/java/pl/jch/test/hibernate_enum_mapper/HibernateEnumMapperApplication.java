@@ -1,5 +1,7 @@
 package pl.jch.test.hibernate_enum_mapper;
 
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -20,8 +22,10 @@ public class HibernateEnumMapperApplication {
     private static void runTest(ConfigurableApplicationContext applicationContext) {
         final PersonRepository repository = applicationContext.getBean(PersonRepository.class);
 
-        printPersons(repository);
+        // reading all records - reading enum values
+        printPersons(repository.findAll());
 
+        // saving enum into database
         repository.save(Person.builder()
                 .id(4L)
                 .firstName("Clark")
@@ -29,13 +33,16 @@ public class HibernateEnumMapperApplication {
                 .personality(PersonalityType.OBSESIVE)
                 .build());
 
-        printPersons(repository);
+        // reading all records - reading enum values
+        printPersons(repository.findAll());
+
+        // using enum in sql where clause
+        printPersons(repository.findByPersonality(PersonalityType.CHEERFUL));
     }
 
-    private static void printPersons(PersonRepository repository) {
+    private static void printPersons(List<Person> persons) {
         System.out.println("*********** Persons: ");
-        repository.findAll()
-                .stream()
+        persons.stream()
                 .map(p -> p.getFirstName() + " " + p.getLastName() + ": " + p.getPersonality())
                 .forEach(System.out::println);
         System.out.println("***********");
